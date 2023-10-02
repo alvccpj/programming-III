@@ -5,16 +5,15 @@ public class Cliente {
     private int idade;
     private String cpf;
     private String endereco;
-    private boolean bomCliente;
+    private boolean bomCliente = true;
     private Item carrinhoDeCompras[] = new Item[100];
+    private int quantidadeItens = 0;
 
-    public Cliente(String nome, int idade, String cpf, String endereco, boolean bomCliente, Item[] carrinhoDeCompras) {
+    public Cliente(String nome, int idade, String cpf, String endereco) {
         this.nome = nome;
         this.idade = idade;
         this.cpf = cpf;
         this.endereco = endereco;
-        this.bomCliente = bomCliente;
-        this.carrinhoDeCompras = carrinhoDeCompras;
     }
 
     public String getNome() {
@@ -65,19 +64,61 @@ public class Cliente {
         this.carrinhoDeCompras = vetor;
     }
 
-    public void adicionar(Item item) {
-    for (int i = 0; i < carrinhoDeCompras.length; i++) {
-        item = carrinhoDeCompras[i];
+    public int getQuantidadeItens() {
+        return quantidadeItens;
     }
+
+    public void setQuantidadeItens(int quantidadeItens) {
+        this.quantidadeItens = quantidadeItens;
+    }
+
+    public void adicionar(Item item) {
+        if (quantidadeItens < 100) {
+            carrinhoDeCompras[quantidadeItens] = item;
+            quantidadeItens++;
+        } else {
+            System.out.println("Sem espaco no carrinho.");
+        }
+
     }
 
     public void cancelar(int codigo) {
-        for (int i = 0; i < carrinhoDeCompras.length; i++) {
+        boolean achou = false;
+        int i;
+        for (i = 0; i < quantidadeItens; i++) {
+            if (carrinhoDeCompras[i].getCodigo() == codigo) {
+                achou = true;
+                carrinhoDeCompras[i] = null;
+            }
+        }
 
+        if (achou) {
+            for (int j = i; j < carrinhoDeCompras.length - 1; j++) {
+                carrinhoDeCompras[j] = carrinhoDeCompras[j + 1];
+            }
+            System.out.println("Item cancelado da compra.");
+        } else {
+            System.out.println("Item não encontado.");
         }
     }
 
-    public void comprar() {
+    public double comprar() {
+        double total = 0.0;
 
+        if (quantidadeItens > 0) {
+            for (int i = 0; i < quantidadeItens; i++) {
+                total += carrinhoDeCompras[i].getValor();
+                carrinhoDeCompras[i].setQtdEmEstoque(carrinhoDeCompras[i].getQtdEmEstoque() - 1);
+            }
+            System.out.println("A média de gastos é de: " + total / quantidadeItens);
+        } else {
+            System.out.println("Carrinho vazio");
+        }
+
+        for (int i = 0; i < quantidadeItens; i++) {
+            carrinhoDeCompras[i] = null;
+        }
+
+        return total;
     }
 }
