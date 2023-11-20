@@ -1,5 +1,7 @@
 package Exercicios3;
 
+import java.util.Random;
+
 public class Professor extends User implements Operacoes {
     private String curso;
     private String matricula;
@@ -49,11 +51,32 @@ public class Professor extends User implements Operacoes {
 
     @Override
     public double media() {
-        return 0;
+        double somaNotas = 0;
+
+        for (int i = 0; i < turma.length; i++) {
+            double[] notas = turma[i].getNotas();
+            for (int j = 0; j < notas.length; j++) {
+                if (notas[j] == 0.0) {
+                    throw new UnsupportedOperationException("A turma ainda não foi finalizada. Aluno: " + turma[i].getNome());
+                }
+                somaNotas += notas[j];
+            }
+        }
+
+        return somaNotas / (turma.length * turma[0].getNotas().length);
     }
 
     @Override
     public void presenca() {
+        Random random = new Random();
 
+        for (int i = 0; i < turma.length; i++) {
+            double numeroAleatorio = random.nextDouble();
+            if (numeroAleatorio >= 0.8) {
+                turma[i].getPresencas()[0] = false;
+            } else {
+                turma[i].getPresencas()[0] = true;
+            }
+        }
     }
 }

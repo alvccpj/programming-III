@@ -65,11 +65,59 @@ public class Aluno extends User implements Operacoes {
 
     @Override
     public double media() {
-        return 0;
+        int contadorFaltas = 0;
+
+        for (int i = 0; i < presencas.length; i++) {
+            if (!presencas[i]) {
+                contadorFaltas++;
+            }
+        }
+        if (contadorFaltas > 16) {
+            System.out.println("Reprovado por falta");
+            return -1;
+        } else if (notas.length < 3) {
+            throw new UnsupportedOperationException("Aluno não tem notas suficientes");
+        } else {
+            double somaNotas = 0;
+
+            for (int i = 0; i < notas.length; i++) {
+                somaNotas += notas[i];
+            }
+
+            double media = somaNotas / notas.length;
+
+            System.out.println("Média: " + media);
+
+            if (media >= 7) {
+                System.out.println("Aprovado por média");
+            } else if (media >= 5) {
+                System.out.println("Aprovado");
+            } else {
+                System.out.println("Reprovado");
+            }
+
+            return media;
+        }
+
+
     }
 
     @Override
     public void presenca() {
+        int faltas = 0;
+        int presencas = 0;
+
+        for (int i = 0; i < this.presencas.length; i++) {
+            if (this.presencas[i]) {
+                presencas++;
+            } else {
+                faltas++;
+            }
+        }
+
+        System.out.println("Faltas: " + faltas);
+        System.out.println("Presenças: " + presencas);
 
     }
+
 }
